@@ -1,13 +1,12 @@
 ﻿using Application.DTOs;
-using Application.DTOs.CustomerDtos;
+using Application.Errors;
 using Application.Helpers;
 using AutoMapper;
 using Domain.Models;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
-using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,20 +14,17 @@ namespace Application.Customer
 {
     public class GetCustomerList
     {
-        public class Query : IRequest<List<CustomersDto>>
+        public class Query : IRequest<CustomerPaginationViewModel>
         {
             public PaginationDTO pagination;
 
-            public Query(HttpContext httpContext, PaginationDTO pagination)
+            public Query(PaginationDTO pagination)
             {
-                HttpContext = httpContext;
                 this.pagination = pagination;
             }
-
-            public HttpContext HttpContext { get; }
         }
 
-        public class Handler : IRequestHandler<Query, List<CustomersDto>>
+        public class Handler : IRequestHandler<Query, CustomerPaginationViewModel>
         {
             private readonly BikeStoresContext context;
             private readonly IMapper mapper;
@@ -39,13 +35,22 @@ namespace Application.Customer
                 this.mapper = mapper;
             }
 
-            public async Task<List<CustomersDto>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<CustomerPaginationViewModel> Handle(Query request, CancellationToken cancellationToken)
             {
                 var queryable = context.Customers.AsQueryable();
-                await request.HttpContext.InsertPaginationPaeametersInResponse(queryable, request.pagination);
-                var customers = await queryable.Paginate(request.pagination).ToListAsync();
 
-                var customersToReturn = mapper.Map<List<Customers>, List<CustomersDto>>(customers);
+                int totalCount = await queryable.CountAsync();
+
+                var CustomersList = await queryable.Paginate(request.pagination).ToListAsync();
+
+                if (CustomersList?.Count == 0)
+                {
+                    throw new RestException(HttpStatusCode.NotFound, new { customer = "Not Found" });
+                }
+
+                var rtobj = ReturnPaginationDto.GetPage(CustomersList, request.pagination.Page, request.pagination.RecordsPerPage, totalCount);
+
+                var customersToReturn = mapper.Map<PaginationViewModel<Customers>, CustomerPaginationViewModel>(rtobj);
 
                 return customersToReturn;
             }

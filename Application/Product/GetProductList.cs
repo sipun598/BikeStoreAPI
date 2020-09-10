@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Errors;
 using Application.Helpers;
 using AutoMapper;
 using Domain.Models;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistance;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +18,7 @@ namespace Application.Product
 {
     public class GetProductList
     {
-        public class Query : IRequest<List<ProductsDto>>
+        public class Query : IRequest<ProductPaginationViewModel>
         {
             public PaginationDTO pagination;
             public HttpContext HttpContext { get; }
@@ -28,7 +30,7 @@ namespace Application.Product
             }
         }
 
-        public class Handler : IRequestHandler<Query, List<ProductsDto>>
+        public class Handler : IRequestHandler<Query, ProductPaginationViewModel>
         {
             private readonly BikeStoresContext context;
             private readonly IMapper mapper;
@@ -39,7 +41,7 @@ namespace Application.Product
                 this.mapper = mapper;
             }
 
-            public async Task<List<ProductsDto>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<ProductPaginationViewModel> Handle(Query request, CancellationToken cancellationToken)
             {
                 var queryable = context
                     .Products
@@ -47,9 +49,16 @@ namespace Application.Product
                     .Include(x => x.Category)
                     .AsQueryable();
 
-                await request.HttpContext.InsertPaginationPaeametersInResponse(queryable, request.pagination);
+                int count = await queryable.CountAsync();
+
                 var products = await queryable.Paginate(request.pagination).ToListAsync();
-                var productsToReturn = mapper.Map<List<Products>, List<ProductsDto>>(products);
+                if (products.Count == 0)
+                {
+                    throw new RestException(HttpStatusCode.NotFound, new { product = "Not Found" });
+                }
+
+                var paginationObj = ReturnPaginationDto.GetPage(products, request.pagination.Page, request.pagination.RecordsPerPage, count);
+                var productsToReturn = mapper.Map<PaginationViewModel<Products>, ProductPaginationViewModel>(paginationObj);
                 return productsToReturn;
             }
         }

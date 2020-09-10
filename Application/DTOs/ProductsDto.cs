@@ -15,4 +15,9 @@ namespace Application.DTOs
         public short ModelYear { get; set; }
         public decimal ListPrice { get; set; }
     }
+
+    public class ProductPaginationViewModel : Pagination
+    {
+        public List<ProductsDto> Items { get; set; }
+    }
 }

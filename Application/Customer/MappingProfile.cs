@@ -10,9 +10,13 @@ namespace Application.Customer
         public MappingProfile()
         {
             CreateMap<Customers, CustomersDto>();
+            CreateMap(typeof(PaginationViewModel<>), typeof(CustomerPaginationViewModel));
+
             CreateMap<Products, ProductsDto>()
                 .ForMember(pd => pd.BrandName, b => b.MapFrom(s => s.Brand.BrandName))
                 .ForMember(pd => pd.CategoryName, c => c.MapFrom(d => d.Category.CategoryName));
+
+            CreateMap(typeof(PaginationViewModel<>), typeof(ProductPaginationViewModel));
 
             CreateMap<Products, BrandProductsDto>()
               .ForMember(pd => pd.BrandName, b => b.MapFrom(s => s.Brand.BrandName));

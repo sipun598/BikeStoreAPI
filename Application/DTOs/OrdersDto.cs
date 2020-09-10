@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.DTOs.OrderDtos
 {
@@ -14,7 +12,5 @@ namespace Application.DTOs.OrderDtos
         public DateTime? ShippedDate { get; set; }
         public int StoreId { get; set; }
         public int StaffId { get; set; }
-
-
     }
 }

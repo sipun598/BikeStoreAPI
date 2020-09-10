@@ -20,9 +20,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<CustomersDto>>> List([FromQuery] PaginationDTO pagination)
+        public async Task<ActionResult<CustomerPaginationViewModel>> List([FromQuery] PaginationDTO pagination)
         {
-            return await mediator.Send(new GetCustomerList.Query(HttpContext, pagination));
+            return await mediator.Send(new GetCustomerList.Query(pagination));
         }
 
         [HttpGet("{id}")]
