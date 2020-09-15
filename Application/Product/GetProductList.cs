@@ -56,7 +56,7 @@ namespace Application.Product
                 {
                     throw new RestException(HttpStatusCode.NotFound, new { product = "Not Found" });
                 }
-                //jenkin5
+                //jenkin7
                 var paginationObj = ReturnPaginationDto.GetPage(products, request.pagination.Page, request.pagination.RecordsPerPage, count);
                 var productsToReturn = mapper.Map<PaginationViewModel<Products>, ProductPaginationViewModel>(paginationObj);
                 return productsToReturn;
