@@ -2,7 +2,6 @@
 using Application.Product;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -19,7 +18,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ProductPaginationViewModel>> ProductList([FromQuery] PaginationDTO pagination)
+        public async Task<ActionResult<ProductPaginationViewModel>> ProductList([FromQuery] PaginationDto pagination)
         {
             return await mediator.Send(new GetProductList.Query(HttpContext, pagination));
         }

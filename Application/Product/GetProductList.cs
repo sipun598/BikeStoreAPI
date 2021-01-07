@@ -7,10 +7,8 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,10 +18,10 @@ namespace Application.Product
     {
         public class Query : IRequest<ProductPaginationViewModel>
         {
-            public PaginationDTO pagination;
+            public readonly PaginationDto pagination;
             public HttpContext HttpContext { get; }
 
-            public Query(HttpContext httpContext, PaginationDTO pagination)
+            public Query(HttpContext httpContext, PaginationDto pagination)
             {
                 HttpContext = httpContext;
                 this.pagination = pagination;

@@ -1,5 +1,4 @@
 ﻿using Application.Brand;
-using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -17,6 +16,12 @@ namespace API.Controllers
         public BrandsController(IMediator mediator)
         {
             this.mediator = mediator;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<BrandPaginationViewModel>> List([FromQuery]PaginationDto pagination)
+        {
+            return await mediator.Send(new GetBrandList.Query(pagination));
         }
 
         [HttpGet("{Id}")]

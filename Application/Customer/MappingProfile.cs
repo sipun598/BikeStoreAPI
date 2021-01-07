@@ -23,6 +23,11 @@ namespace Application.Customer
 
             CreateMap<Products, ProductIdNameDto>().ReverseMap();
             CreateMap<Brands, BrandProductsDto>();
+            CreateMap<Brands, BrandsDto>();
+            CreateMap(typeof(PaginationViewModel<>), typeof(BrandPaginationViewModel));
+
+            CreateMap<Stores, StoresDto>();
+            CreateMap(typeof(PaginationViewModel<>), typeof(StorePaginationViewModel));
         }
     }
 }

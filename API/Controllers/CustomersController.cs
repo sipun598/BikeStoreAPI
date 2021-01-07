@@ -3,7 +3,6 @@ using Application.DTOs;
 using Application.DTOs.CustomerDtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -20,7 +19,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<CustomerPaginationViewModel>> List([FromQuery] PaginationDTO pagination)
+        public async Task<ActionResult<CustomerPaginationViewModel>> List([FromQuery] PaginationDto pagination)
         {
             return await mediator.Send(new GetCustomerList.Query(pagination));
         }

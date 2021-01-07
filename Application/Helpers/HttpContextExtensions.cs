@@ -10,7 +10,7 @@ namespace Application.Helpers
     public static class HttpContextExtensions
     {
         public async static Task InsertPaginationPaeametersInResponse<T>(this HttpContext httpContext,
-            IQueryable<T> queryable, PaginationDTO pagination)
+            IQueryable<T> queryable, PaginationDto pagination)
         {
             if (httpContext == null) { throw new ArgumentNullException(nameof(httpContext)); }
 

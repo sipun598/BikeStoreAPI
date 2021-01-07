@@ -16,9 +16,9 @@ namespace Application.Customer
     {
         public class Query : IRequest<CustomerPaginationViewModel>
         {
-            public PaginationDTO pagination;
+            public readonly PaginationDto pagination;
 
-            public Query(PaginationDTO pagination)
+            public Query(PaginationDto pagination)
             {
                 this.pagination = pagination;
             }

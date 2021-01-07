@@ -1,6 +1,6 @@
 ﻿namespace Application.DTOs
 {
-    public class PaginationDTO
+    public class PaginationDto
     {
         public int Page { get; set; } = 1;
 
